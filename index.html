@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena Image Creator AI</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #121212;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: flex-start;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            transition: background 0.6s ease;
+        }
+
+        /* Gradient Background Animation */
+        @keyframes gradientAnimation {
+            0% {
+                background: linear-gradient(45deg, #0f172a, #1e293b);
+            }
+            50% {
+                background: linear-gradient(45deg, #38bdf8, #4ade80);
+            }
+            100% {
+                background: linear-gradient(45deg, #0f172a, #1e293b);
+            }
+        }
+
+        body {
+            animation: gradientAnimation 6s ease infinite;
+        }
+
+        /* Loading Animation */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid #38bdf8;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Navbar */
+        .navbar {
+            width: 100%;
+            background-color: transparent;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            z-index: 100;
+            padding: 15px 0;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 40px;
+            padding: 0;
+        }
+
+        .navbar ul li {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            position: relative;
+            transition: color 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .navbar ul li a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .navbar ul li a:hover {
+            color: #38bdf8;
+        }
+
+        .navbar ul li a:hover::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #38bdf8;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            animation: underline 0.3s ease-in-out forwards;
+        }
+
+        @keyframes underline {
+            100% {
+                transform: scaleX(1);
+                transform-origin: bottom left;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(to bottom right, #0f172a, #1e293b);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards, parallax 3s infinite linear;
+        }
+
+        .hero .container {
+            text-align: center;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: 600;
+            color: #38bdf8;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.5s forwards;
+        }
+
+        .tagline {
+            font-size: 1.4rem;
+            color: #e2e8f0;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.7s forwards;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #38bdf8, #4ade80);
+            border-radius: 30px;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.9s forwards;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+            border-radius: 50px;
+        }
+
+        /* Parallax Effect */
+        @keyframes parallax {
+            0% {
+                background-position: 0% 0%;
+            }
+            100% {
+                background-position: 100% 100%;
+            }
+        }
+
+        /* Fade-In Animation */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Features Section */
+        .features {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 50px 0;
+            width: 100%;
+            background-color: #1e293b;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            width: 250px;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .feature:hover {
+            transform: translateY(-10px);
+            background-color: rgba(56, 189, 248, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #4ade80;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            font-size: 1rem;
+            color: #cbd5e1;
+        }
+
+        /* About Section */
+        .about {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 60px 0;
+            background-color: #0f172a;
+            text-align: center;
+        }
+
+        .about .container {
+            width: 80%;
+            max-width: 800px;
+        }
+
+        .about h2 {
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1s forwards;
+        }
+
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Scroll Effects */
+        .features, .about {
+            animation: fadeIn 1s ease-out 1s forwards;
+        }
+
+        @media (max-width: 768px) {
+            .features {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .feature {
+                width: 80%;
+            }
+        }
+    </style>
+ <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #111;
+      color: #fff;
+      height: auto; /* Allow the body to grow in height */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      flex-direction: column;
+      overflow-y: scroll; /* Allow vertical scrolling */
+      min-height: 100vh; /* Ensure the content takes at least the full viewport height */
+    }
+  
+    .background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #00c4cc, #ff1f5b, #8c4fff);
+      background-size: 300% 300%;
+      animation: backgroundAnimation 6s ease infinite;
+      z-index: -3;
+    }
+  
+    @keyframes backgroundAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  
+    /* Horizontal Scrolling */
+    .horizontal-scroll {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      animation: horizontalScroll 30s linear infinite;
+      z-index: -2;
+    }
+  
+    .horizontal-scroll img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.3;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+  
+    .horizontal-scroll img:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+  
+    @keyframes horizontalScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+  
+    /* Vertical Scrolling */
+    .vertical-scroll {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      animation: verticalScroll 30s linear infinite;
+      z-index: -1;
+    }
+  
+    .vertical-scroll img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.3;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+  
+    .vertical-scroll img:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+  
+    @keyframes verticalScroll {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-100%); }
+    }
+  
+    /* Main About Section Styling */
+    .about-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      position: relative;
+      padding: 20px;
+      z-index: 1;
+      margin-top: 200px; /* Add space from the top */
+    }
+  
+    .about-section h2 {
+      font-size: 50px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      animation: fadeIn 1.5s ease-out;
+    }
+  
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-50px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  
+    .about-section p {
+      font-size: 18px;
+      line-height: 1.8;
+      max-width: 800px;
+      color: #d4d4d4;
+      margin-bottom: 30px;
+      animation: fadeIn 2s ease-out;
+    }
+  
+  </style>
+  
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#about">About</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="container">
+            <div class="logo">Athena Image Creator AI</div>
+            <p class="tagline">Revolutionize the way you generate images with cutting-edge AI technology.</p>
+            <a href="{{ url_for('athena') }}" class="btn">Get Started</a>
+
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div id="features" class="features">
+        <div class="feature">
+            <div class="feature-icon">&#9889;</div>
+            <div class="feature-title">Fast Generation</div>
+            <p class="feature-description">Generate stunning images within seconds using state-of-the-art AI models.</p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">&#10024;</div>
+            <div class="feature-title">High Quality</div>
+            <p class="feature-description">Experience unmatched quality and clarity in every image.</p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">&#x221e;</div>
+            <div class="feature-title">Unlimited Generation</div>
+            <p class="feature-description">Generate Unlimited Image That You Want.</p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">&#127912;</div>
+            <div class="feature-title">Customizable</div>
+            <p class="feature-description">Tailor the images to your exact needs with flexible options.</p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">&#127760;</div>
+            <div class="feature-title">Accessible Anywhere</div>
+            <p class="feature-description">Use Athena AI on any device, anytime, anywhere.</p>
+        </div>
+    </div>
+    <div class="background"></div>
+
+    <!-- Horizontal Scrolling Images -->
+    <div class="horizontal-scroll">
+      <img src="41.png" alt="AI Image 1">
+      <img src="51.png" alt="AI Image 2">
+      <img src="61.png" alt="AI Image 3">
+    </div>
+  
+    <!-- Vertical Scrolling Images -->
+    <div class="vertical-scroll">
+      <img src="12.png" alt="AI Image 1">
+      <img src="23.png" alt="AI Image 2">
+      <img src="13.png" alt="AI Image 3">
+    </div>
+  
+    <div class="about-section">
+      <h2>Athena - Revolutionizing the Future of Image Creation</h2>
+      <p>Athena is an innovative AI-powered image creation tool designed to push the boundaries of visual design. With cutting-edge machine learning algorithms and advanced image generation models, Athena allows users to generate stunning, high-quality images tailored to their needs. Whether you're a designer, content creator, or enthusiast, Athena empowers you to create limitless visual possibilities at your fingertips.<br>
+
+        Driven by Kaif Ansari's vision in AI development, Athena aims to make complex image generation accessible, fast, and intuitive. From custom images to creative artwork, Athena brings your imagination to life with just a few clicks.<br>
+        
+        Experience the future of image creation today with Athena.</p>
+    </div>
+  
+    <!-- About Section -->
+    <div id="about" class="about">
+        <div class="container">
+            <img src="favicon.png" alt="Profile Picture" class="profile-img">
+            <h2>Kaif Ansari || Founder & CEO</h2>
+            <p>I am the creator of Athena Image Creator AI, a tool that revolutionizes image generation with advanced AI technology.<br>
+            you can contact by visit my website <a href="https://circleup.top" class="link" target="_blank">Kaif Ansari</a></p>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            document.getElementById('loader').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
