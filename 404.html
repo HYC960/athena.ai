@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            background: linear-gradient(45deg, #2e3b4e, #111);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 7rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #FF7F50;
+            margin-bottom: 1rem;
+            animation: slideIn 0.7s ease-out;
+        }
+
+        p {
+            font-size: 1.5rem;
+            color: #A9A9A9;
+            margin-bottom: 2rem;
+            opacity: 0.7;
+            animation: fadeInText 1s ease-out;
+        }
+
+        .button {
+            text-decoration: none;
+            font-size: 1.2rem;
+            color: #fff;
+            background-color: #FF7F50;
+            padding: 12px 30px;
+            border-radius: 5px;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .button:hover {
+            background-color: #FF4500;
+            transform: scale(1.05);
+            box-shadow: 0px 5px 15px rgba(255, 69, 0, 0.4);
+        }
+
+        .animation-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 127, 80, 0.8);
+            animation: particleAnimation 3s infinite;
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateY(-100px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes fadeInText {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes particleAnimation {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(calc(100vw * 1.5), calc(100vh * 1.5)); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>404</h1>
+        <p>The page you are looking for doesn't exist.</p>
+        <a href="/" class="button">Return to Home</a>
+    </div>
+
+    <div class="animation-container">
+        <!-- Generate particles with JavaScript -->
+        <script>
+            const particles = [];
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                document.querySelector('.animation-container').appendChild(particle);
+
+                // Random position for particles
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDuration = `${Math.random() * 2 + 3}s`;
+                particles.push(particle);
+            }
+        </script>
+    </div>
+
+</body>
+</html>
